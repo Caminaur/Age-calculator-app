@@ -5,7 +5,9 @@ const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth();
 const currentDay = new Date().getDate();
 let error = false;
-console.log({ currentYear, currentDay, currentMonth });
+const yearsLabel = document.getElementById("years");
+const monthsLabel = document.getElementById("months");
+const daysLabel = document.getElementById("days");
 
 const calcButton = document.getElementById("btn");
 
@@ -39,10 +41,11 @@ function isDateValid() {
   if (!verifyFields()) return;
 
   const yearValue = parseInt(year.value);
-  const monthValue = parseInt(month.value); // Meses van de 0 a 11
+  const monthValue = parseInt(month.value) - 1; // Meses van de 0 a 11
   const dayValue = parseInt(day.value);
 
-  const date = new Date(yearValue, monthValue, dayValue);
+  const date = new Date(0); // 1900 - 01 - 01
+  date.setFullYear(yearValue, monthValue, dayValue);
 
   const isValid =
     date.getFullYear() === yearValue &&
@@ -50,7 +53,9 @@ function isDateValid() {
     date.getDate() === dayValue;
 
   // console.log("Fecha generada:", date);
+  // console.log("Año esperado vs año generado:", yearValue, date.getFullYear());
   // console.log("Mes esperado vs mes generado:", monthValue, date.getMonth());
+  // console.log("Día esperado vs día generado:", dayValue, date.getDate());
   // console.log("Es fecha válida:", isValid);
 
   return isValid;
@@ -72,8 +77,9 @@ btn.addEventListener("click", (e) => {
   } else {
     removeError(day);
   }
-
-  calculateAge();
+  if (error) return;
+  const ageDetails = calculateAge();
+  setAgeDetails(ageDetails);
 });
 
 function showError(input, message) {
@@ -96,12 +102,9 @@ function removeError(input) {
 }
 
 function calculateAge() {
-  // Calculate the age in years
   let ageYears = currentYear - year.value;
-  let ageMonths = currentMonth - parseInt(month.value) - 1;
+  let ageMonths = currentMonth - (parseInt(month.value) - 1);
   let ageDays = currentDay - day.value;
-  console.log(parseInt(month.value) - 1);
-  console.log(currentMonth);
 
   // Adjust for negative months or days
   if (ageMonths < 0) {
@@ -109,14 +112,23 @@ function calculateAge() {
     ageYears--;
   }
   if (ageDays < 0) {
+    // Cuando el día es 0, JavaScript retrocede al último día del mes anterior.
     let lastMonth = new Date(currentYear, currentMonth - 1, 0);
+
     ageDays += lastMonth.getDate();
     ageMonths--;
-  }
 
-  console.log(`${ageYears} years, ${ageMonths} months, ${ageDays} days`);
+    if (ageMonths < 0) {
+      ageMonths = 11;
+      ageYears--;
+    }
+  }
+  // console.log(`${ageYears} years, ${ageMonths} months, ${ageDays} days`);
   return { years: ageYears, months: ageMonths, days: ageDays };
 }
 
-// Posible problema
-// Que pasa si resto al mes 1 el mes 0, no se percibe ningun cambio, pero si resto al mes 0 el mes 1, el resultado es -1, lo cual no es lo esperado, por lo que se debe ajustar el código para que el mes 0 sea diciembre y el mes 11 sea noviembre.
+function setAgeDetails(ageDetails) {
+  yearsLabel.innerHTML = `${ageDetails.years}`;
+  monthsLabel.innerHTML = `${ageDetails.months}`;
+  daysLabel.innerHTML = `${ageDetails.days}`;
+}

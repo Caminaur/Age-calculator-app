@@ -127,6 +127,7 @@ body {
 
 .section-2 .row {
   font-size: var(--font-size-titles);
+  gap: 10px;
 }
 
 .bold-line {
