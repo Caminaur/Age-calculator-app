@@ -14,6 +14,7 @@ const calcButton = document.getElementById("btn");
 function verifyFields() {
   const inputs = [day, month, year];
   error = false;
+  document.querySelector(".section-1").classList.remove("error");
 
   for (const input of inputs) {
     if (input.value === "") {
@@ -83,6 +84,7 @@ btn.addEventListener("click", (e) => {
 });
 
 function showError(input, message) {
+  document.querySelector(".section-1").classList.add("error");
   dateDiv = input.parentElement.parentElement;
   if (dateDiv.querySelector("p") !== null) {
     dateDiv.querySelector("p").remove();

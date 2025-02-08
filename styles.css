@@ -58,6 +58,13 @@ body {
   align-items: start;
 }
 
+.section-1.error .date label {
+  color: var(--primary-light-red);
+}
+.section-1.error .date .input input {
+  border: 1px solid var(--primary-light-red);
+}
+
 .date {
   display: flex;
   flex-direction: column;
