@@ -20,6 +20,7 @@ function verifyFields() {
     if (input.value === "") {
       showError(input, "This field is required");
       error = true;
+      return false;
     }
   }
   if (day.value > 31) {
@@ -69,7 +70,8 @@ function isDateValid() {
 btn.addEventListener("click", (e) => {
   e.preventDefault();
   // Verificamos los campos con las reglas correspondientes
-  verifyFields();
+  if (!verifyFields()) return;
+  console.log(verifyFields());
 
   // Verificamos que sea una fecha valida, para evitar fechas imposibles
   if (!isDateValid()) {
@@ -108,7 +110,7 @@ function calculateAge() {
   let ageMonths = currentMonth - (parseInt(month.value) - 1);
   let ageDays = currentDay - day.value;
 
-  // Adjust for negative months or days
+  // Ajustes para que los valores sean positivos
   if (ageMonths < 0) {
     ageMonths += 12;
     ageYears--;
